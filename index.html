@@ -73,10 +73,10 @@
 
         <!-- Main Budget Screen -->
         <div id="budget-screen" class="screen">
-            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 md:p-10 text-center relative">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 sm:p-8 md:p-10 text-center relative">
                 
                 <!-- Header with Menu, Title, and Theme Toggle -->
-                <div class="flex justify-between items-center mb-8 relative">
+                <div class="flex justify-between items-center mb-6 sm:mb-8 relative">
                     <!-- Hamburger Menu Button -->
                     <button onclick="toggleMenu()" class="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none p-2 rounded-lg transition-colors">
                         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
@@ -101,7 +101,7 @@
                 </div>
 
                 <!-- Total & Budget Card -->
-                <div class="bg-slate-100 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl p-6 text-center mb-8">
+                <div class="bg-slate-100 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl p-5 sm:p-6 text-center mb-6 sm:mb-8">
                     <p class="text-sm font-medium text-slate-800 dark:text-slate-300">Total Spent:</p>
                     <p id="totalDisplay" class="text-4xl font-bold text-brand dark:text-slate-300 mt-1 mb-3 transition-colors duration-300">£0.00</p>
                     
@@ -127,26 +127,26 @@
                     </div>
                 </div>
 
-                <!-- Item Input Section -->
-                <div class="flex flex-col sm:flex-row gap-2.5 mb-8">
+                <!-- Item Input Section (Stacked vertically on mobile, horizontal row on desktop via sm:flex-row) -->
+                <div class="flex flex-col sm:flex-row gap-2.5 mb-6 sm:mb-8">
                     <!-- Name Input -->
                     <input type="text" id="nameInput" placeholder="Item Name" onkeypress="handleKeyPress(event)" class="w-full sm:w-[40%] py-2.5 px-3 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium rounded-lg border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:bg-white dark:focus:bg-gray-600 text-sm">
                     
-                    <div class="flex gap-2 w-full sm:w-[60%]">
+                    <div class="grid grid-cols-4 sm:flex sm:gap-2 w-full sm:w-[60%] gap-2">
                         <!-- Smaller Price Input -->
-                        <div class="relative w-20 flex-shrink-0">
-                            <input type="number" id="priceInput" placeholder="Price" step="0.01" onkeypress="handleKeyPress(event)" class="w-full py-2.5 pl-6 pr-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium rounded-lg border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:bg-white dark:focus:bg-gray-600 text-sm">
+                        <div class="relative col-span-1 sm:w-20 sm:flex-shrink-0">
+                            <input type="number" id="priceInput" placeholder="Price" step="0.01" onkeypress="handleKeyPress(event)" class="w-full py-2.5 pl-5 sm:pl-6 pr-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium rounded-lg border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:bg-white dark:focus:bg-gray-600 text-sm">
                             <span class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 font-bold text-sm">£</span>
                         </div>
                         
-                        <!-- Shop Name Input (Made a tiny bit wider: changed from w-24 to w-28) -->
-                        <input type="text" id="shopInput" placeholder="Shop Name" onkeypress="handleKeyPress(event)" class="w-28 py-2.5 px-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium rounded-lg border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:bg-white dark:focus:bg-gray-600 text-sm flex-shrink-0">
+                        <!-- Shop Name Input -->
+                        <input type="text" id="shopInput" placeholder="Shop Name" onkeypress="handleKeyPress(event)" class="col-span-1 sm:w-28 py-2.5 px-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium rounded-lg border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:bg-white dark:focus:bg-gray-600 text-sm sm:flex-shrink-0">
 
                         <!-- Quantity Input -->
-                        <input type="number" id="qtyInput" placeholder="Qty" value="1" min="1" onkeypress="handleKeyPress(event)" class="w-12 py-2.5 px-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium rounded-lg text-center border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:bg-white dark:focus:bg-gray-600 text-sm flex-shrink-0" title="Quantity">
+                        <input type="number" id="qtyInput" placeholder="Qty" value="1" min="1" onkeypress="handleKeyPress(event)" class="col-span-1 sm:w-12 py-2.5 px-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium rounded-lg text-center border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:bg-white dark:focus:bg-gray-600 text-sm sm:flex-shrink-0" title="Quantity">
                         
                         <!-- Add Button -->
-                        <button onclick="addItem()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 px-3 rounded-lg transition-transform transform hover:scale-105 shadow-md text-sm flex-grow">
+                        <button onclick="addItem()" class="col-span-1 bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 px-3 rounded-lg transition-transform transform hover:scale-105 shadow-md text-sm sm:flex-grow">
                             Add
                         </button>
                     </div>
@@ -413,7 +413,7 @@
                         alert("Invalid backup file.");
                     }
                 } catch (err) {
-                    alert("Error reading file. Make sure it is a valid JSON backup.");
+                    alert("Error reading file. Make sure it is a valid JSON backup.(JSON)");
                 }
             };
             reader.readAsText(file);
