@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Shopping Budget</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .screen {
+            display: none;
+        }
+        .screen.active {
+            display: block;
+        }
+        /* Custom styles for number input */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+        /* Scrollbar styling for the list */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+            border-radius: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #4A5568;
+            border-radius: 4px;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+          darkMode: 'class',
+          theme: {
+            extend: {
+              colors: {
+                'brand': '#4A5568',
+                'brand-dark': '#2D3748',
+              }
+            }
+          }
+        }
+    </script>
+</head>
+<body class="bg-slate-900 dark:bg-slate-900 flex flex-col items-center justify-center min-h-screen transition-colors duration-300 p-4">
+
+    <div class="w-full max-w-xl mx-auto transition-all duration-300 flex-grow flex flex-col justify-center">
+
+        <!-- Intro Screen -->
+        <div id="intro-screen" class="screen active">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 md:p-10 text-center">
+                <div class="w-36 h-36 mx-auto mb-6 bg-brand rounded-full flex items-center justify-center">
+                    <svg class="w-20 h-20 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H19m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                </div>
+
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-200">Shopping Budget</h1>
+                <p class="text-gray-500 dark:text-gray-400 mt-4 mb-8">Track your Shopping Budget</p>
+                <button id="start-btn" onclick="showScreen('budget-screen')" class="w-full bg-brand hover:bg-brand-dark text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-105 shadow-md">
+                    Start
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Budget Screen -->
+        <div id="budget-screen" class="screen">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 md:p-10 text-center relative">
+                
+                <!-- Header with Menu, Title, and Theme Toggle -->
+                <div class="flex justify-between items-center mb-8 relative">
+                    <!-- Hamburger Menu Button -->
+                    <button onclick="toggleMenu()" class="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none p-2 rounded-lg transition-colors">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div id="dropdownMenu" class="hidden absolute top-14 left-0 bg-white dark:bg-slate-700 rounded-lg shadow-xl border border-gray-200 dark:border-slate-600 w-48 py-2 z-10 text-left">
+                        <button onclick="saveList(); toggleMenu()" class="w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 text-left font-medium">Save Backup</button>
+                        <button onclick="document.getElementById('fileInput').click(); toggleMenu()" class="w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 text-left font-medium">Import Backup</button>
+                        <input type="file" id="fileInput" accept=".json" style="display:none;" onchange="importList(event)">
+                    </div>
+                    
+                    <h1 class="text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-200">Shopping Budget</h1>
+
+                    <!-- Theme Toggle Button -->
+                    <button onclick="toggleTheme()" class="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none p-2 rounded-lg transition-colors">
+                        <!-- Sun Icon (Hidden in Light Mode) -->
+                        <svg id="icon-sun" class="w-7 h-7 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <!-- Moon Icon (Hidden in Dark Mode) -->
+                        <svg id="icon-moon" class="w-7 h-7 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                </div>
+
+                <!-- Total & Budget Card -->
+                <div class="bg-slate-100 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl p-6 text-center mb-8">
+                    <p class="text-sm font-medium text-slate-800 dark:text-slate-300">Total Spent:</p>
+                    <p id="totalDisplay" class="text-4xl font-bold text-brand dark:text-slate-300 mt-1 mb-3 transition-colors duration-300">£0.00</p>
+                    
+                    <!-- Budget Container -->
+                    <div class="flex items-center justify-center gap-2 mt-2 pt-3 border-t border-slate-300 dark:border-slate-600">
+                        <span class="text-sm font-semibold text-gray-600 dark:text-gray-400">Budget:</span>
+                        
+                        <!-- Input State (Shown when budget is 0 or unset) -->
+                        <div id="budgetInputContainer" class="flex items-center gap-2">
+                            <div class="relative w-24">
+                                <span class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 font-bold text-sm">£</span>
+                                <input type="number" id="budgetInput" placeholder="0.00" step="0.01" onkeypress="handleKeyPress(event)" class="w-full py-1 pl-5 pr-1 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm font-medium rounded-md border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-1 focus:ring-brand">
+                            </div>
+                            <button onclick="setBudget()" class="bg-brand hover:bg-brand-dark text-white text-xs font-bold py-1.5 px-3 rounded-md transition-colors shadow-sm">
+                                Set
+                            </button>
+                        </div>
+
+                        <!-- Display State (Shown when budget is set, clickable to edit) -->
+                        <div id="budgetDisplayContainer" class="hidden items-center gap-1">
+                            <span id="budgetDisplay" class="text-sm font-bold text-brand-dark dark:text-slate-200 cursor-pointer border-b border-dashed border-gray-400 dark:border-gray-500 hover:text-brand" onclick="editBudget()" title="Click to change budget">£0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item Input Section -->
+                <div class="flex flex-col sm:flex-row gap-2.5 mb-8">
+                    <!-- Name Input -->
+                    <input type="text" id="nameInput" placeholder="Item Name" onkeypress="handleKeyPress(event)" class="w-full sm:w-[40%] py-2.5 px-3 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium rounded-lg border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:bg-white dark:focus:bg-gray-600 text-sm">
+                    
+                    <div class="flex gap-2 w-full sm:w-[60%]">
+                        <!-- Smaller Price Input -->
+                        <div class="relative w-20 flex-shrink-0">
+                            <input type="number" id="priceInput" placeholder="Price" step="0.01" onkeypress="handleKeyPress(event)" class="w-full py-2.5 pl-6 pr-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium rounded-lg border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:bg-white dark:focus:bg-gray-600 text-sm">
+                            <span class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 font-bold text-sm">£</span>
+                        </div>
+                        
+                        <!-- Shop Name Input (Made a tiny bit wider: changed from w-24 to w-28) -->
+                        <input type="text" id="shopInput" placeholder="Shop Name" onkeypress="handleKeyPress(event)" class="w-28 py-2.5 px-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium rounded-lg border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:bg-white dark:focus:bg-gray-600 text-sm flex-shrink-0">
+
+                        <!-- Quantity Input -->
+                        <input type="number" id="qtyInput" placeholder="Qty" value="1" min="1" onkeypress="handleKeyPress(event)" class="w-12 py-2.5 px-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium rounded-lg text-center border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:bg-white dark:focus:bg-gray-600 text-sm flex-shrink-0" title="Quantity">
+                        
+                        <!-- Add Button -->
+                        <button onclick="addItem()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 px-3 rounded-lg transition-transform transform hover:scale-105 shadow-md text-sm flex-grow">
+                            Add
+                        </button>
+                    </div>
+                </div>
+
+                <!-- List Panel -->
+                <div id="listPanel" class="space-y-3.5 text-left max-h-72 overflow-y-auto custom-scroll pr-2 border-t border-gray-200 dark:border-slate-700 pt-5">
+                    <!-- Dynamically populated items will appear here -->
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Disclaimer Footer -->
+        <footer class="text-center mt-6 mb-2">
+            <p class="text-gray-400 dark:text-gray-500 text-sm font-medium">Disclaimer: These are just estimates.</p>
+        </footer>
+    </div>
+
+    <script>
+        let budget = 0;
+        let items = [];
+
+        // --- Screen Navigation ---
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // --- UI Interactions ---
+
+        function toggleMenu() {
+            const menu = document.getElementById('dropdownMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('dropdownMenu');
+            const menuBtn = document.querySelector('[onclick="toggleMenu()"]');
+            if (!menu.contains(event.target) && !menuBtn.contains(event.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            html.classList.toggle('dark');
+        }
+
+        // --- Core Calculator Logic ---
+
+        function updateUI() {
+            const total = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const totalEl = document.getElementById('totalDisplay');
+            const budgetDisplay = document.getElementById('budgetDisplay');
+            const inputContainer = document.getElementById('budgetInputContainer');
+            const displayContainer = document.getElementById('budgetDisplayContainer');
+            
+            totalEl.textContent = `£${total.toFixed(2)}`;
+
+            if (budget > 0) {
+                budgetDisplay.textContent = `£${budget.toFixed(2)}`;
+                inputContainer.classList.add('hidden');
+                displayContainer.classList.remove('hidden');
+                displayContainer.classList.add('flex');
+
+                if (total > budget) {
+                    totalEl.classList.remove('text-brand', 'dark:text-slate-300', 'text-green-500');
+                    totalEl.classList.add('text-red-500');
+                } else {
+                    totalEl.classList.remove('text-brand', 'dark:text-slate-300', 'text-red-500');
+                    totalEl.classList.add('text-green-500');
+                }
+            } else {
+                inputContainer.classList.remove('hidden');
+                displayContainer.classList.remove('flex');
+                displayContainer.classList.add('hidden');
+
+                totalEl.classList.remove('text-red-500', 'text-green-500');
+                totalEl.classList.add('text-brand', 'dark:text-slate-300');
+            }
+
+            renderList();
+        }
+
+        function setBudget() {
+            const input = document.getElementById('budgetInput');
+            const val = parseFloat(input.value);
+            if (!isNaN(val) && val > 0) {
+                budget = val;
+                input.value = '';
+                updateUI();
+            }
+        }
+
+        function editBudget() {
+            const newBudget = prompt("Enter a new budget (£):", budget);
+            if (newBudget !== null && newBudget.trim() !== "") {
+                const parsed = parseFloat(newBudget);
+                if (!isNaN(parsed) && parsed >= 0) {
+                    budget = parsed;
+                    updateUI();
+                }
+            }
+        }
+
+        function addItem() {
+            const nameInput = document.getElementById('nameInput');
+            const priceInput = document.getElementById('priceInput');
+            const qtyInput = document.getElementById('qtyInput');
+            const shopInput = document.getElementById('shopInput');
+            
+            const price = parseFloat(priceInput.value);
+            const qty = parseInt(qtyInput.value, 10) || 1;
+            let name = nameInput.value.trim();
+            let shop = shopInput.value.trim();
+
+            if (!isNaN(price) && price >= 0) {
+                if (name === "") {
+                    name = `Item ${items.length + 1}`;
+                }
+                if (shop === "") {
+                    shop = "General";
+                }
+
+                items.push({ name: name, shop: shop, price: price, qty: Math.max(1, qty) });
+                
+                nameInput.value = '';
+                priceInput.value = '';
+                qtyInput.value = '1';
+                shopInput.value = '';
+                nameInput.focus();
+                
+                updateUI();
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                if (event.target.id === 'budgetInput') {
+                    setBudget();
+                } else {
+                    addItem();
+                }
+            }
+        }
+
+        function renameItem(index) {
+            const newName = prompt("Enter a new name for this item:", items[index].name);
+            if (newName !== null && newName.trim() !== "") {
+                items[index].name = newName.trim();
+                updateUI();
+            }
+        }
+
+        function changeShopName(index) {
+            const newShop = prompt("Enter a new shop name:", items[index].shop);
+            if (newShop !== null && newShop.trim() !== "") {
+                items[index].shop = newShop.trim();
+                updateUI();
+            }
+        }
+
+        function repriceItem(index) {
+            const newPrice = prompt(`Enter a new unit price for ${items[index].name} (£):`, items[index].price);
+            if (newPrice !== null && newPrice.trim() !== "") {
+                const parsedPrice = parseFloat(newPrice);
+                if (!isNaN(parsedPrice) && parsedPrice >= 0) {
+                    items[index].price = parsedPrice;
+                    updateUI();
+                }
+            }
+        }
+
+        function changeQtyItem(index) {
+            const newQty = prompt(`Enter new quantity for ${items[index].name}:`, items[index].qty);
+            if (newQty !== null && newQty.trim() !== "") {
+                const parsedQty = parseInt(newQty, 10);
+                if (!isNaN(parsedQty) && parsedQty > 0) {
+                    items[index].qty = parsedQty;
+                    updateUI();
+                }
+            }
+        }
+
+        function removeItem(index) {
+            items.splice(index, 1);
+            updateUI();
+        }
+
+        function renderList() {
+            const panel = document.getElementById('listPanel');
+            panel.innerHTML = '';
+            
+            if (items.length === 0) {
+                panel.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400 italic mt-4 text-sm">Your list is currently empty, add prices as you shop.</p>';
+                return;
+            }
+
+            items.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'flex flex-col sm:flex-row sm:justify-between sm:items-center bg-gray-100 dark:bg-slate-700 p-3 rounded-lg transition-colors hover:bg-gray-200 dark:hover:bg-slate-600 gap-2';
+                
+                div.innerHTML = `
+                    <div class="flex items-center flex-grow min-w-0 flex-wrap gap-1.5">
+                        <span class="font-semibold text-brand-dark dark:text-slate-300 cursor-pointer border-b border-dashed border-gray-400 dark:border-gray-500 truncate text-xs sm:text-sm" onclick="renameItem(${index})" title="Click to rename item">${item.name}</span>
+                        <span class="text-[11px] sm:text-xs font-medium text-gray-600 dark:text-gray-300 px-1.5 py-0.5 bg-gray-200 dark:bg-slate-600 rounded cursor-pointer border-b border-dashed border-transparent hover:border-gray-400" onclick="changeShopName(${index})" title="Click to change shop name">${item.shop}</span>
+                        <span class="text-[11px] sm:text-xs font-medium text-gray-500 dark:text-gray-400 cursor-pointer border-b border-dashed border-transparent hover:border-gray-400 ml-0.5 px-1 py-0.5 bg-gray-200 dark:bg-slate-600 rounded" onclick="changeQtyItem(${index})" title="Click to change quantity">x${item.qty}</span>
+                    </div>
+                    <div class="flex items-center justify-between sm:justify-end gap-3 sm:w-auto">
+                        <span class="font-bold text-gray-800 dark:text-gray-200 cursor-pointer border-b border-dashed border-gray-400 dark:border-gray-500 whitespace-nowrap text-xs sm:text-sm" onclick="repriceItem(${index})" title="Click to edit unit price">£${(item.price * item.qty).toFixed(2)}</span>
+                        <button onclick="removeItem(${index})" class="remove-btn bg-red-600 hover:bg-red-700 text-white font-bold p-1 rounded-md transition-colors text-xs leading-none shadow-sm flex items-center justify-center w-5 h-5" title="Remove item">✖</button>
+                    </div>
+                `;
+                panel.appendChild(div);
+            });
+            
+            panel.scrollTop = panel.scrollHeight;
+        }
+
+        function saveList() {
+            if (items.length === 0 && budget === 0) {
+                alert("Nothing to save yet!");
+                return;
+            }
+            
+            let backupName = prompt("Enter a name for your backup file:", "shopping_budget_backup");
+            if (backupName === null) return;
+            
+            backupName = backupName.trim() === "" ? "shopping_budget_backup" : backupName.trim();
+            backupName = backupName.replace(/[^a-z0-9_-]/gi, '_').toLowerCase();
+
+            const data = JSON.stringify({ budget, items });
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${backupName}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function importList(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.items !== undefined) {
+                        items = data.items.map(item => ({
+                            ...item,
+                            qty: item.qty || 1,
+                            shop: item.shop || "General"
+                        }));
+                        budget = data.budget || 0;
+                        updateUI();
+                    } else {
+                        alert("Invalid backup file.");
+                    }
+                } catch (err) {
+                    alert("Error reading file. Make sure it is a valid JSON backup.");
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = ''; 
+        }
+
+        // Initialize UI
+        updateUI();
+    </script>
+</body>
+</html>
