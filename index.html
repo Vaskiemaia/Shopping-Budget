@@ -127,27 +127,30 @@
                     </div>
                 </div>
 
-                <!-- Item Input Section: 2-row grid on mobile, exact desktop row on desktop -->
+                <!-- Item Input Section -->
                 <div class="flex flex-col sm:flex-row gap-2.5 mb-6 sm:mb-8">
                     <!-- Name Input -->
                     <input type="text" id="nameInput" placeholder="Item Name" onkeypress="handleKeyPress(event)" class="w-full sm:w-[40%] py-2.5 px-3 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium rounded-lg border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:bg-white dark:focus:bg-gray-600 text-sm">
                     
-                    <!-- Secondary Row on Mobile, Side-by-side on Desktop -->
-                    <div class="grid grid-cols-12 gap-2 w-full sm:w-[60%] sm:flex sm:gap-2">
-                        <!-- Smaller Price Input -->
-                        <div class="relative col-span-4 sm:w-20 sm:flex-shrink-0">
-                            <input type="number" id="priceInput" placeholder="Price" step="0.01" onkeypress="handleKeyPress(event)" class="w-full py-2.5 pl-6 pr-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium rounded-lg border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:bg-white dark:focus:bg-gray-600 text-sm">
-                            <span class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 font-bold text-sm">£</span>
+                    <div class="flex flex-col sm:flex-row gap-2.5 sm:gap-2 w-full sm:w-[60%] items-center sm:items-stretch">
+                        
+                        <!-- Middle row on Mobile, continuing standard line on Desktop -->
+                        <div class="flex flex-row justify-center gap-2 w-full sm:w-auto">
+                            <!-- Smaller Price Input -->
+                            <div class="relative w-24 sm:w-20 flex-shrink-0">
+                                <input type="number" id="priceInput" placeholder="Price" step="0.01" onkeypress="handleKeyPress(event)" class="w-full py-2.5 pl-6 pr-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium rounded-lg border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:bg-white dark:focus:bg-gray-600 text-sm">
+                                <span class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 font-bold text-sm">£</span>
+                            </div>
+                            
+                            <!-- Shop Name Input -->
+                            <input type="text" id="shopInput" placeholder="Shop Name" onkeypress="handleKeyPress(event)" class="w-28 py-2.5 px-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium rounded-lg border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:bg-white dark:focus:bg-gray-600 text-sm flex-shrink-0">
+
+                            <!-- Quantity Input -->
+                            <input type="number" id="qtyInput" placeholder="Qty" value="1" min="1" onkeypress="handleKeyPress(event)" class="w-14 sm:w-12 py-2.5 px-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium rounded-lg text-center border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:bg-white dark:focus:bg-gray-600 text-sm flex-shrink-0" title="Quantity">
                         </div>
                         
-                        <!-- Shop Name Input -->
-                        <input type="text" id="shopInput" placeholder="Shop Name" onkeypress="handleKeyPress(event)" class="col-span-5 sm:w-28 py-2.5 px-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium rounded-lg border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:bg-white dark:focus:bg-gray-600 text-sm sm:flex-shrink-0">
-
-                        <!-- Quantity Input -->
-                        <input type="number" id="qtyInput" placeholder="Qty" value="1" min="1" onkeypress="handleKeyPress(event)" class="col-span-3 sm:w-12 py-2.5 px-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium rounded-lg text-center border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-brand focus:bg-white dark:focus:bg-gray-600 text-sm sm:flex-shrink-0" title="Quantity">
-                        
-                        <!-- Add Button (Spans full width on mobile second row) -->
-                        <button onclick="addItem()" class="col-span-12 sm:col-auto bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 px-3 rounded-lg transition-transform transform hover:scale-105 shadow-md text-sm sm:flex-grow">
+                        <!-- Add Button (Centered naturally by the parent flex-col on mobile) -->
+                        <button onclick="addItem()" class="px-6 sm:px-3 bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-lg transition-transform transform hover:scale-105 shadow-md text-sm sm:flex-grow flex-shrink-0">
                             Add
                         </button>
                     </div>
@@ -351,17 +354,17 @@
 
             items.forEach((item, index) => {
                 const div = document.createElement('div');
-                div.className = 'flex flex-col sm:flex-row sm:justify-between sm:items-center bg-gray-100 dark:bg-slate-700 p-3 rounded-lg transition-colors hover:bg-gray-200 dark:hover:bg-slate-600 gap-2';
+                div.className = 'flex flex-row justify-between items-center bg-gray-100 dark:bg-slate-700 p-3 rounded-lg transition-colors hover:bg-gray-200 dark:hover:bg-slate-600 gap-2';
                 
                 div.innerHTML = `
-                    <div class="flex items-center flex-grow min-w-0 flex-wrap gap-1.5">
+                    <div class="flex items-center flex-grow min-w-0 gap-1.5 pr-2">
                         <span class="font-semibold text-brand-dark dark:text-slate-300 cursor-pointer border-b border-dashed border-gray-400 dark:border-gray-500 truncate text-xs sm:text-sm" onclick="renameItem(${index})" title="Click to rename item">${item.name}</span>
-                        <span class="text-[11px] sm:text-xs font-medium text-gray-600 dark:text-gray-300 px-1.5 py-0.5 bg-gray-200 dark:bg-slate-600 rounded cursor-pointer border-b border-dashed border-transparent hover:border-gray-400" onclick="changeShopName(${index})" title="Click to change shop name">${item.shop}</span>
-                        <span class="text-[11px] sm:text-xs font-medium text-gray-500 dark:text-gray-400 cursor-pointer border-b border-dashed border-transparent hover:border-gray-400 ml-0.5 px-1 py-0.5 bg-gray-200 dark:bg-slate-600 rounded" onclick="changeQtyItem(${index})" title="Click to change quantity">x${item.qty}</span>
+                        <span class="flex-shrink-0 text-[11px] sm:text-xs font-medium text-gray-600 dark:text-gray-300 px-1.5 py-0.5 bg-gray-200 dark:bg-slate-600 rounded cursor-pointer border-b border-dashed border-transparent hover:border-gray-400" onclick="changeShopName(${index})" title="Click to change shop name">${item.shop}</span>
+                        <span class="flex-shrink-0 text-[11px] sm:text-xs font-medium text-gray-500 dark:text-gray-400 cursor-pointer border-b border-dashed border-transparent hover:border-gray-400 ml-0.5 px-1 py-0.5 bg-gray-200 dark:bg-slate-600 rounded" onclick="changeQtyItem(${index})" title="Click to change quantity">x${item.qty}</span>
                     </div>
-                    <div class="flex items-center justify-between sm:justify-end gap-3 sm:w-auto">
+                    <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
                         <span class="font-bold text-gray-800 dark:text-gray-200 cursor-pointer border-b border-dashed border-gray-400 dark:border-gray-500 whitespace-nowrap text-xs sm:text-sm" onclick="repriceItem(${index})" title="Click to edit unit price">£${(item.price * item.qty).toFixed(2)}</span>
-                        <button onclick="removeItem(${index})" class="remove-btn bg-red-600 hover:bg-red-700 text-white font-bold p-1 rounded-md transition-colors text-xs leading-none shadow-sm flex items-center justify-center w-5 h-5" title="Remove item">✖</button>
+                        <button onclick="removeItem(${index})" class="remove-btn bg-red-600 hover:bg-red-700 text-white font-bold p-1 rounded-md transition-colors text-xs leading-none shadow-sm flex items-center justify-center w-5 h-5 flex-shrink-0" title="Remove item">✖</button>
                     </div>
                 `;
                 panel.appendChild(div);
